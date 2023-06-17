@@ -552,9 +552,9 @@ public class Camera2Helper {
                 lock.lock();
 
                 int offset = 0;
-                int width  = image.getWidth();
+                int width = image.getWidth();
                 int height = image.getHeight();
-                int len    = width * height;
+                int len = width * height;
                 if (yuvData == null) {
                     yuvData = new byte[len * 3 / 2];
                 }
@@ -589,9 +589,10 @@ public class Camera2Helper {
                         dstData = new byte[len * 3 / 2];
                     }
                     if (rotateDegree == 90) {
-                        YUVUtil.YUV420pRotate90(dstData, yuvData, width, height);
+//                        YUVUtil.YUV420pRotate90(dstData, yuvData, width, height);
+                        dstData = YUVUtil.YUV420pRotate270(yuvData, width, height);
                     } else {
-                        YUVUtil.YUV420pRotate180(dstData, yuvData, width, height);
+                        dstData = YUVUtil.rotateYUV420Degree180(yuvData, width, height);
                     }
                     if (camera2Listener != null) {
                         camera2Listener.onPreviewFrame(dstData);

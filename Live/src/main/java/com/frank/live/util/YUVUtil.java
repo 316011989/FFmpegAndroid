@@ -65,9 +65,9 @@ public class YUVUtil {
             u = u - 128;
             v = v - 128;
 
-            argb[i]             = yuv2argb(y1, u, v);
-            argb[i + 1]         = yuv2argb(y2, u, v);
-            argb[width + i]     = yuv2argb(y3, u, v);
+            argb[i] = yuv2argb(y1, u, v);
+            argb[i + 1] = yuv2argb(y2, u, v);
+            argb[width + i] = yuv2argb(y3, u, v);
             argb[width + i + 1] = yuv2argb(y4, u, v);
 
             if (i != 0 && (i + 2) % width == 0)
@@ -75,11 +75,20 @@ public class YUVUtil {
         }
     }
 
+    /**
+     * 旋转90°,但是方向错误
+     *
+     * @param dst
+     * @param src
+     * @param width
+     * @param height
+     */
     public static void YUV420pRotate90(byte[] dst, byte[] src, int width, int height) {
         int n = 0;
         int wh = width * height;
         int halfWidth = width / 2;
         int halfHeight = height / 2;
+
         // y
         for (int j = 0; j < width; j++) {
             for (int i = height - 1; i >= 0; i--) {
@@ -100,57 +109,56 @@ public class YUVUtil {
         }
     }
 
-    public static void YUV420pRotate180(byte[] dst, byte[] src, int width, int height) {
-        int n = 0;
+    /**
+     * 旋转270°,但是镜像反的
+     */
+    public static byte[] YUV420pRotate270(byte[] src, int width, int height) {
+        byte[] dst = new byte[width * height * 3 / 2];
+        int pos = 0;
         int halfWidth = width / 2;
         int halfHeight = height / 2;
-        // y
-        for (int j = height - 1; j >= 0; j--) {
-            for (int i = width; i > 0; i--) {
-                dst[n++] = src[width * j + i - 1];
+        //旋转Y
+        int k = 0;
+        for (int i = width - 1; i >= 0; i--) {
+            for (int j = 0; j < height; j++) {
+                dst[k++] = src[j * width + i];
             }
         }
-        // u
-        int offset = width * height;
-        for (int j = halfHeight - 1; j >= 0; j--) {
-            for (int i = halfWidth; i > 0; i--) {
-                dst[n++] = src[offset + halfWidth * j + i - 1];
+        //旋转U
+        pos = width * height;
+        for (int i = halfWidth - 1; i >= 0; i--) {
+            for (int j = 0; j < halfHeight; j++) {
+                dst[k++] = src[pos + j * halfWidth + i];
             }
         }
-        // v
-        offset += halfWidth * halfHeight;
-        for (int j = halfHeight - 1; j >= 0; j--) {
-            for (int i = halfWidth; i > 0; i--) {
-                dst[n++] = src[offset + halfWidth * j + i - 1];
+
+        //旋转V
+        pos = width * height * 5 / 4;
+        for (int i = halfWidth - 1; i >= 0; i--) {
+            for (int j = 0; j < halfHeight; j++) {
+                dst[k++] = src[pos + j * halfWidth + i];
             }
         }
+
+        return dst;
     }
 
-    public static void flipYUV(byte[] dst, byte[] src, int width, int height) {
-        if (dst == null || width <= 0 || height <= 0)
-            return;
 
-        int idx = 0;
-        // Y
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-					dst[idx++] = src[width - i + (height - j) * width];
-            }
+    public static byte[] rotateYUV420Degree180(byte[] src, int width, int height) {
+        byte[] yuv = new byte[width * height * 3 / 2];
+        int i = 0;
+        int count = 0;
+        for (i = width * height - 1; i >= 0; i--) {
+            yuv[count] = src[i];
+            count++;
         }
-        // U
-        int offset = width * height;
-        for (int i = 0; i < width / 2; i++) {
-            for (int j = 0; j < height / 2; j++) {
-                dst[idx++] = src[offset + width - i + (height / 2 - j) * width / 2];
-            }
+//        i = width * height * 3 / 2 - 1;
+        for (i = width * height * 3 / 2 - 1; i >= width
+                * height; i -= 2) {
+            yuv[count++] = src[i - 1];
+            yuv[count++] = src[i];
         }
-        // V
-        offset += width * height / 4;
-        for (int i = 0; i < width / 2; i++) {
-            for (int j = 0; j < height / 2; j++) {
-                dst[idx++] = src[offset + width - i + (height / 2 - j) * width / 2];
-            }
-        }
+        return yuv;
     }
 
 }
