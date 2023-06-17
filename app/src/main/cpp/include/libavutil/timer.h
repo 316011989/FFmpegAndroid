@@ -52,9 +52,9 @@
 #include "log.h"
 
 #if   ARCH_AARCH64
-#   include "libavutil/aarch64/timer.h"
+#   include "arm64-v8a/libavutil/aarch64/timer.h"
 #elif ARCH_ARM
-#   include "libavutil/arm/timer.h"
+#   include "armeabi-v7a/libavutil/arm/timer.h"
 #elif ARCH_PPC
 #   include "ppc/timer.h"
 #elif ARCH_RISCV
