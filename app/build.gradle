@@ -19,7 +19,10 @@ android {
             }
         }
         ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a"
+//            abiFilters "armeabi-v7a"
+            abiFilters "arm64-v8a"
+//            abiFilters "x86"
+//            abiFilters "x86_64"
         }
     }
     buildTypes {
@@ -48,8 +51,8 @@ android {
 
     packagingOptions {
         exclude 'META-INF/proguard/coroutines.pro'
-        pickFirst 'lib/armeabi-v7a/libmp3lame.so'
-        pickFirst 'lib/arm64-v8a/libmp3lame.so'
+//        pickFirst 'lib/armeabi-v7a/libmp3lame.so'
+//        pickFirst 'lib/arm64-v8a/libmp3lame.so'
         pickFirst 'lib/armeabi-v7a/libffmpeg.so'
         pickFirst 'lib/arm64-v8a/libffmpeg.so'
     }
@@ -62,15 +65,11 @@ android {
 }
 
 dependencies {
+    implementation project(':Live')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerviewVersion"
-    implementation project(':Live')
     implementation "androidx.core:core-ktx:$rootProject.core_ktx"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycle_ktx"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation project(':AndroidMedia')
-    //implementation "libmp3" if you need mp3-lite module
-//    implementation project(':libmp3')
-    implementation project(':CameraFilter')
 }
